@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const TodoHeadBlock = styled.div`
@@ -21,15 +21,52 @@ const DayText = styled.div`
   padding-top: 5px;
 `;
 
+const DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "Octber",
+  "November",
+  "December",
+];
+
 const TodoHead = () => {
   //@TODO 현재 시간을 표시해야합니다.
-  const dayString = "Tuesday";
-  const dateString = "July 20, 2021";
+  const date = new Date();
+  const [today, setToday] = useState({
+    day : date.getDay() -1,
+    date : date.getDate(),
+    month: date.getMonth(),
+    year: date.getFullYear(),
+  })
+  const currentDate = `${DAYS[today.day]} ${MONTHS[today.month]} ${today.date}, ${today.year}`
+  const [totalDate, setTotalDate] =useState(currentDate)
+
+  useEffect(()=>{
+setTotalDate(currentDate)
+  },[today])
+
+ 
 
   return (
     <TodoHeadBlock>
-      <DayText>{dayString}</DayText>
-      <DateText>{dateString}</DateText>
+      <DayText>{totalDate}</DayText>
+      {/* <DateText>{dateString}</DateText> */}
     </TodoHeadBlock>
   );
 };

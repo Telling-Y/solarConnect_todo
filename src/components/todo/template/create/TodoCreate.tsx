@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Modal, Button, Space, DatePicker } from 'antd';
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Itodo } from "components/todo/TodoService";
 
@@ -62,24 +63,38 @@ const TodoCreate = ({
 }: TodoCreateProps) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const [date, setDate] = useState("")
 
   const handleToggle = () => setOpen(!open);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setValue(e.target.value);
 
+  const  onChange = (date: any, dateString: string) =>{
+      setDate(dateString)
+    }
+
+  const error = () => {
+      Modal.error({
+        content: '작성해주세요',
+      });
+    }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 새로고침 방지
-
-    createTodo({
-      id: nextId,
-      text: value,
-      done: false
-    });
-    incrementNextId(); // nextId 하나 증가
-
-    setValue(""); // input 초기화
-    setOpen(false); // open 닫기
+    e.preventDefault(); 
+    if(value){
+      createTodo({
+        id: nextId,
+        text: value,
+        done: false,
+        dueDate:date,
+      });
+      incrementNextId(); // nextId 하나 증가
+  
+      setValue(""); // input 초기화
+      setOpen(false); // open 닫기
+    }else{error()}
   };
+
 
   return (
     <>
@@ -91,11 +106,13 @@ const TodoCreate = ({
             onChange={handleChange}
             value={value}
           />
-
           <CircleButton onClick={handleToggle} open={open}>
             <PlusCircleOutlined />
           </CircleButton>
         </InsertForm>
+      
+    <DatePicker onChange={onChange} />
+ 
       </InsertFormPositioner>
     </>
   );
